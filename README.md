@@ -1,8 +1,8 @@
-# davidtanis.dev
+# tanis.zldagroup.com
 
-Personal one-page site. Separate from ZLDA Group by design: ZLDA sells the company, this sells the individual.
+Personal one-page site. Separate from the ZLDA marketing site by design: ZLDA sells the company, this sells the individual. Separate repo, separate deploy, no shared code.
 
-**Domain note:** `davidtanis.com` is owned by the New York Times chef and author of the same name, so it is not obtainable. The site is configured for `davidtanis.dev` (unregistered as of this writing). Update `site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt` together when the real domain is chosen.
+**Domain:** `tanis.zldagroup.com`. `davidtanis.com` is owned by the New York Times chef and author of the same name and is not obtainable. If this ever moves to its own apex domain, change `site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt` together, and add a redirect so existing links keep resolving.
 
 ## Stack
 
