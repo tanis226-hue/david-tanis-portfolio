@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg-rgb: 252 252 250;
+  --color-bg-secondary-rgb: 243 243 239;
+  --color-surface-rgb: 255 255 255;
+  --color-text-rgb: 19 22 20;
+  --color-text-soft-rgb: 58 64 61;
+  --color-text-muted-rgb: 104 112 105;
+  --color-accent-rgb: 14 116 144;
+  --color-accent-dark-rgb: 21 94 117;
+  --color-border-rgb: 19 22 20;
+  --color-border-alpha: 0.1;
+}
+
+html.dark {
+  --color-bg-rgb: 16 20 19;
+  --color-bg-secondary-rgb: 21 27 25;
+  --color-surface-rgb: 24 32 29;
+  --color-text-rgb: 238 242 239;
+  --color-text-soft-rgb: 198 205 200;
+  --color-text-muted-rgb: 139 148 142;
+  --color-accent-rgb: 56 197 232;
+  --color-accent-dark-rgb: 103 217 242;
+  --color-border-rgb: 238 242 239;
+  --color-border-alpha: 0.1;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  @apply bg-bg text-ink font-sans;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3 {
+  @apply font-display;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+}
+
+::selection {
+  background: rgb(var(--color-accent-rgb));
+  color: #0c1a20;
+}
+
+@layer components {
+  .wrap {
+    @apply mx-auto w-full max-w-editorial px-6 sm:px-8;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink-muted;
+  }
+
+  .rule {
+    @apply border-t;
+    border-color: rgb(var(--color-border-rgb) / var(--color-border-alpha));
+  }
+
+  .link-accent {
+    @apply text-accent-dark underline decoration-1 underline-offset-4;
+    text-decoration-color: rgb(var(--color-accent-rgb) / 0.4);
+    transition: text-decoration-color 0.15s ease;
+  }
+
+  .link-accent:hover {
+    text-decoration-color: rgb(var(--color-accent-rgb));
+  }
+
+  .card {
+    @apply bg-surface rounded-lg p-6 sm:p-7;
+    border: 1px solid rgb(var(--color-border-rgb) / 0.1);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .card:hover {
+    border-color: rgb(var(--color-accent-rgb) / 0.45);
+  }
+
+  .tag {
+    @apply font-mono text-[0.66rem] uppercase tracking-[0.1em] text-ink-muted;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

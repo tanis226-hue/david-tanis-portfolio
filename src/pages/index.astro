@@ -1,0 +1,232 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const work = [
+	{
+		name: 'iepOS',
+		kind: 'Flagship product',
+		blurb:
+			'A universal student learning OS sold to schools and districts, with formal IDEA IEP and 504 compliance workflows built in as a tier rather than the centerpiece. One data model, one workflow, three configurations.',
+		detail:
+			'Turborepo monorepo: Next.js 16 web app, mobile client, and eight shared packages. Prisma on Postgres, NextAuth v5, Anthropic models behind a dedicated AI package. Architecture is enforced in CI, not convention: dedicated checks gate the engine boundary, the read-model boundary, multi-tenancy, migration rollback sections, and prompt-evaluation bumps.',
+		tags: ['Next.js 16', 'Prisma', 'Anthropic', 'Turborepo'],
+	},
+	{
+		name: 'ZLDA Health',
+		kind: 'Multi-tenant operations platform',
+		blurb:
+			'Back-office platform for physician groups and post-acute facilities. Sits beside an EHR rather than replacing one: credentialing, licensure expiry, HR case management, shift scheduling, census tracking, and internal control runs.',
+		detail:
+			'96,600 lines across 515 TypeScript files. 93 Prisma models, 51 migrations, 220 API route handlers with auth guards on 212 (the eight exceptions are health probes, auth endpoints, and a constant-time bearer-compared backup route). Built to HIPAA technical-safeguard patterns: audit-log immutability enforced in Postgres with DELETE rules and UPDATE triggers, AES-256-GCM envelope encryption with per-value IVs and a version prefix for key rotation, per-table row-level security, and a scored retention and risk register.',
+		tags: ['Next.js', 'Postgres RLS', 'Azure', 'Governance'],
+	},
+	{
+		name: 'RavePM',
+		kind: 'AI governance architecture',
+		blurb:
+			'AI-native property management SaaS serving staff, residents, owners, and vendors in one application. The interesting part is not the AI, it is the layer that decides what the AI is allowed to do.',
+		detail:
+			'Every AI tool call passes a compliance wrapper: a hardcoded set of actions the model may never auto-execute regardless of configuration, org-configurable approval rules with dollar-band fallbacks, and a wrapper that never invokes the handler for an action needing approval. Every outcome lands in an audit table recording what was done, why, which data was used, and who approved. 49,700 lines, 53 tables, 57 test files, and a three-tier model router behind a dependency-injected transport so the suite runs green with no API key.',
+		tags: ['Turborepo', 'Drizzle', 'Stripe', 'AI approval gates'],
+	},
+	{
+		name: 'ZLDA Assistant',
+		kind: 'Production LLM engineering',
+		blurb:
+			'A private executive assistant unifying tasks, calendar, triaged email, CRM, and finance, with an agent holding real write access across all of it.',
+		detail:
+			'Bounded agentic loop with a hard step ceiling, parallel tool fan-out, loop detection by hashed tool signature, and structured error feedback so the model self-corrects instead of retrying. 45+ tools, a full pgvector RAG pipeline with semantic boundary snapping on chunks, per-model USD cost accounting with prompt caching, and its own MCP server exposing every tool to external clients.',
+		tags: ['Agent loop', 'pgvector RAG', 'MCP server', 'Cost accounting'],
+	},
+	{
+		name: 'NBA Trade Machine',
+		kind: 'Deterministic rules engine',
+		blurb:
+			'The 2023 NBA Collective Bargaining Agreement implemented as a correctness engine. Deliberately contains no AI anywhere: when the answer has to be right, the arithmetic is hand-written and tested.',
+		detail:
+			'A 13-rule ordered pipeline over an immutable context emitting 29 distinct finding codes, each carrying a real CBA citation and an actionable fix. Covers tiered salary matching, base-year compensation, poison-pill extensions, both aprons, hard caps derived from trade shape, and the Stepien rule. Ships an auto-fix solver that returns the mutations making an illegal trade legal. 195 test cases across 29 files, including an adversarial suite written against known gaps in my own engine.',
+		tags: ['TypeScript', '195 tests', 'No AI', 'Rules engine'],
+	},
+	{
+		name: 'Client systems',
+		kind: 'Delivered engagements',
+		blurb:
+			'Commerce, scheduling, and intake systems for a restoration shop, a bakery, and a landscaping business. Different domains, same spine: one database serving both the customer front door and the operator queue.',
+		detail:
+			'A dual-mirrored scheduling engine doing all civil-date math in the business timezone, with the server re-classifying every submitted date authoritatively. Server-side price recomputation so payment amounts never originate from the browser. Idempotent Stripe webhooks guarded by status preconditions so duplicate events cannot double-fire notifications. Authorization pushed into Postgres row-level security rather than route handlers.',
+		tags: ['Stripe', 'Neon', 'Netlify Functions', 'RLS'],
+	},
+];
+
+const principles = [
+	{
+		title: 'Deterministic core, model at the edges',
+		body: 'Where correctness matters, the arithmetic is hand-written and tested and the model only interprets or drafts. Metrics get computed in TypeScript before anything reaches a prompt.',
+	},
+	{
+		title: 'The client is never trusted',
+		body: 'Prices, dates, and authorization are re-derived server-side in every system I build. Checkout rebuilds the cart from the database. The browser gets a vote, not a verdict.',
+	},
+	{
+		title: 'Governance in the database',
+		body: 'Audit immutability and tenant isolation belong in DELETE rules, triggers, and row-level security policies. A missed check in a route handler should not be able to bypass them.',
+	},
+	{
+		title: 'Degrade gracefully by default',
+		body: 'Missing provider credentials skip their channel instead of erroring. Fallback catalogs render when the database returns nothing. Stale config serves while the database is unreachable.',
+	},
+];
+
+const title = 'David Tanis - Operator and systems builder';
+const description =
+	'I design and build the systems businesses run on: governance-grade data models, AI with approval gates, and operations software that survives contact with real users.';
+---
+
+<Layout title={title} description={description}>
+	<header class="wrap flex items-center justify-between py-6">
+		<span class="font-display text-lg font-bold tracking-tight">David Tanis</span>
+		<button
+			id="theme-toggle"
+			type="button"
+			aria-label="Toggle color theme"
+			class="rounded-md px-3 py-1.5 text-xs font-semibold text-ink-muted transition hover:text-ink"
+			style="border: 1px solid rgb(var(--color-border-rgb) / 0.14)"
+		>
+			Theme
+		</button>
+	</header>
+
+	<main>
+		<section class="wrap pb-16 pt-10 sm:pt-16">
+			<p class="eyebrow">Fort Myers, Florida</p>
+			<h1 class="mt-5 max-w-3xl text-[clamp(2.1rem,5.2vw,3.6rem)]">
+				I build the systems <span class="text-accent-dark">businesses actually run on.</span>
+			</h1>
+			<p class="mt-6 max-w-2xl text-lg text-ink-soft">
+				Operations and data by background, engineer by practice. I take messy, fast-moving
+				environments and give them a spine: clear workflows, an honest data model, and software the
+				team will still be using in a year.
+			</p>
+			<p class="mt-4 max-w-2xl text-ink-soft">
+				I co-founded <a class="link-accent" href="https://zldagroup.com">ZLDA Group</a>, where most
+				of this work ships. Currently building <strong class="font-semibold text-ink">iepOS</strong>,
+				a learning platform for schools, and finishing an MS in Data Analytics and AI at Florida Gulf
+				Coast University.
+			</p>
+			<div class="mt-9 flex flex-wrap gap-3">
+				<a
+					href="mailto:tanis226@gmail.com"
+					class="rounded-md bg-accent px-5 py-2.5 text-sm font-bold text-white transition hover:bg-accent-dark"
+				>
+					Get in touch
+				</a>
+				<a
+					href="https://github.com/tanis226-hue"
+					class="rounded-md px-5 py-2.5 text-sm font-bold text-ink transition hover:text-accent-dark"
+					style="border: 1px solid rgb(var(--color-border-rgb) / 0.16)"
+				>
+					GitHub
+				</a>
+			</div>
+		</section>
+
+		<section class="wrap py-14">
+			<div class="rule pt-10">
+				<p class="eyebrow">Selected work</p>
+				<h2 class="mt-4 max-w-2xl text-[clamp(1.6rem,3vw,2.2rem)]">
+					Six systems, one set of habits.
+				</h2>
+				<p class="mt-4 max-w-2xl text-ink-soft">
+					Every figure below is engineering scale: lines, tables, routes, tests. None of it is usage
+					or revenue. I would rather tell you what I built than imply traction I do not have.
+				</p>
+			</div>
+
+			<div class="mt-10 grid gap-5 md:grid-cols-2">
+				{
+					work.map((item) => (
+						<article class="card flex flex-col">
+							<p class="tag">{item.kind}</p>
+							<h3 class="mt-2 text-xl">{item.name}</h3>
+							<p class="mt-3 text-[0.95rem] text-ink-soft">{item.blurb}</p>
+							<p class="mt-3 text-[0.88rem] leading-relaxed text-ink-muted">{item.detail}</p>
+							<ul class="mt-5 flex flex-wrap gap-x-3 gap-y-1.5 pt-4" style="border-top: 1px dashed rgb(var(--color-border-rgb) / 0.14)">
+								{item.tags.map((tag) => (
+									<li class="tag">{tag}</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="wrap py-14">
+			<div class="rule pt-10">
+				<p class="eyebrow">How I build</p>
+				<h2 class="mt-4 max-w-2xl text-[clamp(1.6rem,3vw,2.2rem)]">
+					Opinions that survived contact with production.
+				</h2>
+			</div>
+			<div class="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2">
+				{
+					principles.map((p) => (
+						<div>
+							<h3 class="text-base font-semibold text-accent-dark">{p.title}</h3>
+							<p class="mt-2 text-[0.95rem] text-ink-soft">{p.body}</p>
+						</div>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="wrap py-14">
+			<div class="rule pt-10">
+				<p class="eyebrow">Now</p>
+				<div class="mt-6 grid gap-8 sm:grid-cols-[1fr_1.4fr]">
+					<h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">What I am working on.</h2>
+					<div class="space-y-4 text-ink-soft">
+						<p>
+							Taking <strong class="font-semibold text-ink">iepOS</strong> into school pilots for the
+							2026-27 year, which means the work has shifted from building features to earning trust:
+							compliance workflows, data boundaries, and the unglamorous operational documentation
+							that makes a district say yes.
+						</p>
+						<p>
+							Finishing an MS in Data Analytics and AI at FGCU, and spending most of my remaining
+							attention on one question: how do you put a language model somewhere consequential and
+							still be able to prove what it did.
+						</p>
+						<p>
+							Open to conversations about AI governance, operations tooling, and anything involving a
+							schema that has gotten away from someone.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="wrap py-14">
+			<div class="rule pt-10">
+				<p class="eyebrow">Contact</p>
+				<h2 class="mt-4 text-[clamp(1.6rem,3vw,2.2rem)]">Say hello.</h2>
+				<p class="mt-4 max-w-xl text-ink-soft">
+					Best reached by email. If it is about a business problem rather than me personally, ZLDA is
+					the better front door.
+				</p>
+				<div class="mt-6 flex flex-wrap gap-x-8 gap-y-3">
+					<a class="link-accent" href="mailto:tanis226@gmail.com">tanis226@gmail.com</a>
+					<a class="link-accent" href="https://github.com/tanis226-hue">github.com/tanis226-hue</a>
+					<a class="link-accent" href="https://zldagroup.com">zldagroup.com</a>
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<footer class="wrap py-10">
+		<div class="rule flex flex-wrap items-center justify-between gap-3 pt-6">
+			<p class="tag">David Tanis</p>
+			<p class="tag">Built with Astro</p>
+		</div>
+	</footer>
+</Layout>

@@ -1,0 +1,56 @@
+---
+import '@fontsource-variable/archivo/wght.css';
+import '@fontsource-variable/schibsted-grotesk';
+import '../styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<meta property="og:type" content="profile" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify({
+				'@context': 'https://schema.org',
+				'@type': 'Person',
+				name: 'David Tanis',
+				jobTitle: 'Co-Founder, ZLDA Group',
+				url: 'https://davidtanis.com',
+				sameAs: ['https://github.com/tanis226-hue', 'https://zldagroup.com'],
+			})}
+		/>
+		<script is:inline>
+			// Set before paint so the correct theme lands without a flash.
+			const stored = localStorage.getItem('theme');
+			const dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+			document.documentElement.classList.toggle('dark', dark);
+		</script>
+	</head>
+	<body>
+		<slot />
+		<script is:inline>
+			document.getElementById('theme-toggle')?.addEventListener('click', () => {
+				const dark = document.documentElement.classList.toggle('dark');
+				localStorage.setItem('theme', dark ? 'dark' : 'light');
+			});
+		</script>
+	</body>
+</html>
