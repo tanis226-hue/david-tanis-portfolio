@@ -3,7 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-	site: 'https://davidtanis.com',
+	// davidtanis.com belongs to the New York Times chef of the same name.
+	// Change this and public/robots.txt together once the domain is registered.
+	site: 'https://davidtanis.dev',
 	output: 'static',
 	integrations: [sitemap()],
 	build: {

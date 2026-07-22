@@ -1,6 +1,8 @@
-# davidtanis.com
+# davidtanis.dev
 
 Personal one-page site. Separate from ZLDA Group by design: ZLDA sells the company, this sells the individual.
+
+**Domain note:** `davidtanis.com` is owned by the New York Times chef and author of the same name, so it is not obtainable. The site is configured for `davidtanis.dev` (unregistered as of this writing). Update `site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt` together when the real domain is chosen.
 
 ## Stack
 

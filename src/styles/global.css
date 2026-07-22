@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: light;
   --color-bg-rgb: 252 252 250;
   --color-bg-secondary-rgb: 243 243 239;
   --color-surface-rgb: 255 255 255;
@@ -16,6 +17,7 @@
 }
 
 html.dark {
+  color-scheme: dark;
   --color-bg-rgb: 16 20 19;
   --color-bg-secondary-rgb: 21 27 25;
   --color-surface-rgb: 24 32 29;
@@ -81,11 +83,19 @@ h1, h2, h3 {
   .card {
     @apply bg-surface rounded-lg p-6 sm:p-7;
     border: 1px solid rgb(var(--color-border-rgb) / 0.1);
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease;
   }
 
   .card:hover {
     border-color: rgb(var(--color-accent-rgb) / 0.45);
+  }
+
+  .avatar {
+    @apply rounded-full object-cover;
+    /* The studio backdrop is a grey vignette, so a circle crop keeps it from
+       reading as a grey box against the off-white page. */
+    box-shadow: 0 0 0 1px rgb(var(--color-border-rgb) / 0.12),
+      0 0 0 5px rgb(var(--color-accent-rgb) / 0.09);
   }
 
   .tag {

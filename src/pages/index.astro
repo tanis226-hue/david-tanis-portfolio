@@ -6,7 +6,7 @@ const work = [
 		name: 'iepOS',
 		kind: 'Flagship product',
 		blurb:
-			'A universal student learning OS sold to schools and districts, with formal IDEA IEP and 504 compliance workflows built in as a tier rather than the centerpiece. One data model, one workflow, three configurations.',
+			'A universal student learning OS built for schools and districts, with formal IDEA IEP and 504 compliance workflows as a tier rather than the centerpiece. One data model, one workflow, three configurations.',
 		detail:
 			'Turborepo monorepo: Next.js 16 web app, mobile client, and eight shared packages. Prisma on Postgres, NextAuth v5, Anthropic models behind a dedicated AI package. Architecture is enforced in CI, not convention: dedicated checks gate the engine boundary, the read-model boundary, multi-tenancy, migration rollback sections, and prompt-evaluation bumps.',
 		tags: ['Next.js 16', 'Prisma', 'Anthropic', 'Turborepo'],
@@ -98,6 +98,16 @@ const description =
 
 	<main>
 		<section class="wrap pb-16 pt-10 sm:pt-16">
+			<img
+				src="/david-tanis-480.webp"
+				srcset="/david-tanis-480.webp 480w, /david-tanis-960.webp 960w"
+				sizes="132px"
+				width="132"
+				height="132"
+				alt="David Tanis"
+				fetchpriority="high"
+				class="avatar mb-8 h-[108px] w-[108px] sm:h-[132px] sm:w-[132px]"
+			/>
 			<p class="eyebrow">Fort Myers, Florida</p>
 			<h1 class="mt-5 max-w-3xl text-[clamp(2.1rem,5.2vw,3.6rem)]">
 				I build the systems <span class="text-accent-dark">businesses actually run on.</span>
@@ -187,10 +197,10 @@ const description =
 					<h2 class="text-[clamp(1.6rem,3vw,2.2rem)]">What I am working on.</h2>
 					<div class="space-y-4 text-ink-soft">
 						<p>
-							Taking <strong class="font-semibold text-ink">iepOS</strong> into school pilots for the
-							2026-27 year, which means the work has shifted from building features to earning trust:
-							compliance workflows, data boundaries, and the unglamorous operational documentation
-							that makes a district say yes.
+							Building <strong class="font-semibold text-ink">iepOS</strong> toward its first school
+							pilots, which means the work has shifted from adding features to earning trust:
+							compliance workflows, tenant boundaries, and the unglamorous operational
+							documentation that makes a district say yes.
 						</p>
 						<p>
 							Finishing an MS in Data Analytics and AI at FGCU, and spending most of my remaining
