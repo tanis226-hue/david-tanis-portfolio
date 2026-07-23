@@ -56,18 +56,45 @@ h1, h2, h3 {
   color: #0c1a20;
 }
 
+/* A single visible focus ring for every interactive element. Replaces the
+   previously invisible outline:none on the theme toggle. */
+:focus-visible {
+  outline: 2px solid rgb(var(--color-accent-rgb));
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 @layer components {
   .wrap {
     @apply mx-auto w-full max-w-editorial px-6 sm:px-8;
   }
-
-  .eyebrow {
-    @apply font-mono text-[0.68rem] uppercase tracking-[0.18em] text-ink-muted;
+  .wrap-wide {
+    @apply mx-auto w-full max-w-wide px-6 sm:px-8;
   }
 
-  .rule {
-    @apply border-t;
-    border-color: rgb(var(--color-border-rgb) / var(--color-border-alpha));
+  /* Eyebrow / kicker. Sans, not mono: the mono stack was never loaded and fell
+     back inconsistently across machines. ink-soft holds ~10:1 contrast. */
+  .kicker {
+    @apply font-sans text-label font-semibold uppercase text-ink-soft;
+  }
+
+  /* The ledger: one numeric device at three sizes so a reader learns it once.
+     tabular-nums makes the index column align on a shared digit grid. */
+  .stat {
+    @apply font-display font-bold text-ink;
+    font-size: clamp(2rem, 3.6vw, 2.9rem);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .stat-sm {
+    @apply font-display font-bold text-ink text-title;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.05;
+  }
+  /* Exactly one accent number on the page: the honesty zero. */
+  .stat-accent {
+    color: rgb(var(--color-accent-dark-rgb));
   }
 
   .link-accent {
@@ -75,38 +102,65 @@ h1, h2, h3 {
     text-decoration-color: rgb(var(--color-accent-rgb) / 0.4);
     transition: text-decoration-color 0.15s ease;
   }
-
   .link-accent:hover {
     text-decoration-color: rgb(var(--color-accent-rgb));
   }
 
-  .card {
-    @apply bg-surface rounded-lg p-6 sm:p-7;
-    border: 1px solid rgb(var(--color-border-rgb) / 0.1);
-    transition: border-color 0.2s ease;
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-accent px-5 py-2.5 text-sm font-bold text-white transition;
+  }
+  .btn-primary:hover {
+    background-color: rgb(var(--color-accent-dark-rgb));
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-bold text-ink transition;
+    border: 1px solid rgb(var(--color-border-rgb) / 0.16);
+  }
+  .btn-ghost:hover {
+    color: rgb(var(--color-accent-dark-rgb));
+    border-color: rgb(var(--color-accent-rgb) / 0.5);
   }
 
-  .card:hover {
-    border-color: rgb(var(--color-accent-rgb) / 0.45);
+  /* Index rows: no cards, no surfaces. Hover grows a 2px accent left edge. */
+  .index-row {
+    box-shadow: inset 0 0 0 0 transparent;
+    transition: box-shadow 0.2s ease;
+  }
+  @media (min-width: 1024px) {
+    .index-row:hover {
+      box-shadow: inset 2px 0 0 0 rgb(var(--color-accent-rgb) / 0.7);
+    }
   }
 
   .avatar {
     @apply rounded-full object-cover;
-    /* The studio backdrop is a grey vignette, so a circle crop keeps it from
-       reading as a grey box against the off-white page. */
     box-shadow: 0 0 0 1px rgb(var(--color-border-rgb) / 0.12),
-      0 0 0 5px rgb(var(--color-accent-rgb) / 0.09);
+      0 0 0 6px rgb(var(--color-accent-rgb) / 0.08);
   }
 
-  .tag {
-    @apply font-mono text-[0.66rem] uppercase tracking-[0.1em] text-ink-muted;
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus {
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded-md bg-accent px-4 py-2 text-sm font-bold text-white;
   }
 }
 
+/* Masthead border appears only after the page has scrolled a little. */
+.masthead {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+.masthead[data-scrolled='true'] {
+  border-bottom-color: rgb(var(--color-border-rgb) / var(--color-border-alpha));
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
