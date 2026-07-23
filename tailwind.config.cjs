@@ -7,6 +7,7 @@ module.exports = {
       fontFamily: {
         sans: ['"Schibsted Grotesk Variable"', '"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
         display: ['"Archivo Variable"', '"Helvetica Neue"', 'Helvetica', 'sans-serif'],
+        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
       // Named scale replaces the 11 ad hoc sizes. Kept on `extend` so Tailwind's
       // default classes still resolve and nothing silently renders sizeless.
