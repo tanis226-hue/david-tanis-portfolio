@@ -133,7 +133,7 @@ const description =
 
 	<main id="main">
 		<!-- Hero. wrap-wide and a 2.2fr text column so the headline sets in two lines. -->
-		<section class="wrap-wide grid gap-10 pb-10 pt-10 sm:pt-14 lg:grid-cols-[2.2fr_1fr] lg:items-start lg:gap-14">
+		<section class="wrap-wide grid gap-10 pb-10 pt-10 sm:pt-14 lg:grid-cols-[2.2fr_1fr] lg:items-center lg:gap-14">
 			<div class="lg:pt-2">
 				<p class="kicker">Business Systems Architect / Naples, FL</p>
 				<h1 class="mt-5 text-display">
@@ -148,34 +148,34 @@ const description =
 					<a href="#work" class="btn-primary">View selected work</a>
 					<a href="/David-Tanis-Resume.pdf" class="btn-ghost">View résumé</a>
 				</div>
+				<div class="mt-10 border-t border-line/12 pt-6">
+					<p class="kicker text-ink-muted">Selected scope</p>
+					<ul class="mt-4 grid gap-x-8 gap-y-3 sm:grid-cols-3">
+						{scope.map((s) => (
+							<li class="flex gap-2.5 text-meta text-ink-soft">
+								<span aria-hidden="true" class="mt-1.5 h-1 w-1 flex-none rounded-full bg-accent"></span>
+								<span>{s}</span>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
 			<div class="lg:justify-self-end">
-				<div class="max-w-[19rem]">
+				<div class="max-w-[22rem]">
 					<img
 						src="/david-tanis-960.webp"
 						srcset="/david-tanis-480.webp 480w, /david-tanis-960.webp 960w"
-						sizes="(max-width: 640px) 200px, 304px"
-						width="304"
-						height="304"
+						sizes="(max-width: 640px) 200px, 340px"
+						width="340"
+						height="340"
 						alt="David Tanis"
 						fetchpriority="high"
-						class="avatar h-[200px] w-[200px] sm:h-[304px] sm:w-[304px]"
+						class="avatar h-[200px] w-[200px] sm:h-[340px] sm:w-[340px]"
 					/>
 					<p class="provenance mt-4">
 						MBA in Information Systems / PMP / Lean Six Sigma Black Belt / CSCP
 					</p>
 					<p class="provenance mt-1.5">Adjunct Professor / U.S. Navy Reserve veteran</p>
-					<div class="mt-6 border-t border-line/12 pt-5">
-						<p class="kicker text-ink-muted">Selected scope</p>
-						<ul class="mt-3 space-y-2">
-							{scope.map((s) => (
-								<li class="flex gap-2.5 text-meta text-ink-soft">
-									<span aria-hidden="true" class="mt-1.5 h-1 w-1 flex-none rounded-full bg-accent"></span>
-									<span>{s}</span>
-								</li>
-							))}
-						</ul>
-					</div>
 				</div>
 			</div>
 		</section>
