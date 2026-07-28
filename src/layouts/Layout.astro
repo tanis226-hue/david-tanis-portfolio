@@ -43,9 +43,18 @@ const ogImage = new URL('/og-david-tanis.jpg', Astro.site).href;
 				'@context': 'https://schema.org',
 				'@type': 'Person',
 				name: 'David Tanis',
-				jobTitle: 'AI & Business Systems Architect',
+				// One identity everywhere. AI is a capability, not the title.
+				jobTitle: 'Business Systems Architect',
 				url: Astro.site?.href,
 				image: ogImage,
+				knowsAbout: [
+					'Business systems architecture',
+					'Operational process design',
+					'Data architecture',
+					'Systems implementation',
+					'Analytics and decision support',
+					'Applied AI and governance',
+				],
 				sameAs: [
 					'https://www.linkedin.com/in/dtanis/',
 					'https://github.com/tanis226-hue',

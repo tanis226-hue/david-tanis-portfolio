@@ -1,173 +1,106 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-// Featured work: three case studies, each problem -> role -> decisions -> evidence.
-// Status labels are deliberate. ZLDA Health and iepOS are my own products, not
-// client deployments; the client engagements are separate and stay anonymized.
-const featured = [
+// Personal site, not a second consulting site. ZLDA answers "why hire this firm".
+// This answers "who is David, what has he done, how does his background fit
+// together". Deliberately avoids the firm's vocabulary. Lead audience is employers
+// and senior collaborators; clients get pointed to the firm.
+
+// Right-column proof, kept to three lines so the column reads as intentional
+// without becoming dense.
+const scope = [
+	'Cross-industry operational systems',
+	'Discovery through rollout',
+	'Regulated and compliance-sensitive workflows',
+];
+
+// Concise cards. The full context / role / approach / system / controls treatment
+// belongs on per-project pages when those exist.
+// `meta` is the client or domain, `status` the maturity. They render as separate
+// lines so neither disappears into the other.
+const work = [
 	{
-		name: 'ZLDA Health',
-		kind: 'Healthcare operations platform',
-		status: 'Product, pre-pilot',
-		problem:
-			'Physician groups run credentialing, licensure, HR, scheduling, and census tracking across disconnected spreadsheets, beside an EHR that was never meant to hold any of it.',
-		role: 'Product architecture, domain modeling, compliance workflow design, and implementation.',
-		decisions:
-			'A HIPAA-aligned back-office platform that sits beside the EHR rather than replacing it. Tenant isolation enforced in Postgres, audit records made immutable by triggers, AES-256-GCM field encryption with per-value IVs, and an explicit auth guard on every route.',
-		stack: ['Next.js', 'Postgres RLS', 'Azure', 'HIPAA safeguards'],
-		stats: [
-			{ value: '93', label: 'data models' },
-			{ value: '220', label: 'API routes' },
-			{ value: '212/220', label: 'routes auth-guarded' },
-			{ value: '51', label: 'migrations' },
-		],
-		source: { label: 'Private product repo, walkthrough on request' },
+		name: 'Ordering and Fulfillment System',
+		meta: "Marie's Caribbean Bakery",
+		status: 'Live',
+		body: 'Unified web, phone, and walk-in orders into one workflow with capacity rules, cutoff dates, and a central fulfillment queue.',
+		href: 'https://mariescaribbeanbakery.com/',
+		cta: 'Visit live site',
 	},
 	{
-		name: 'iepOS',
-		kind: 'K-12 learning and compliance platform',
-		status: 'Product, preparing for first pilots',
-		problem:
-			'Schools manage learning interventions, IEPs, and 504 plans across separate administrative systems, each carrying its own data and its own compliance burden.',
-		role: 'Product strategy, domain modeling, architecture, AI controls, and compliance workflow design.',
-		decisions:
-			'One data model with IDEA IEP and 504 compliance as a tier rather than the product, so a district runs one system instead of three. Every AI-drafted change needs staff approval, edits carry field-level provenance, data is separated by school, and architecture boundaries are enforced in CI.',
-		stack: ['Next.js 16', 'Turborepo', 'Prisma', 'Anthropic'],
-		stats: [
-			{ value: '2', label: 'clients, web and mobile' },
-			{ value: '8', label: 'shared packages' },
-			{ value: '5', label: 'boundaries gated in CI' },
-			{ value: '3', label: 'configs, one model' },
-		],
-		source: { label: 'Private product repo, walkthrough on request' },
+		name: 'Commerce and Product Operations',
+		meta: 'The Usual Suspects Garage',
+		status: 'In implementation',
+		body: 'Built a phased platform for customer accounts, commerce, fulfillment, communication, and internal product-development tracking.',
+		href: 'https://usgarage.netlify.app',
+		cta: 'Visit live site',
 	},
 	{
-		name: 'NBA Trade Machine',
-		kind: 'Deterministic rules engine',
-		status: 'Public project',
-		problem:
-			"The NBA's 2023 Collective Bargaining Agreement is dense enough that even experts disagree on whether a given trade is legal.",
-		role: 'Regulatory interpretation, rules architecture, data modeling, and adversarial testing.',
-		decisions:
-			'An implementation of the CBA that evaluates a proposed trade, names the controlling rule, and shows how an illegal deal can be made legal. AI is kept entirely out of the correctness path, rules evaluate in order, every finding cites a real provision, and an auto-fix solver returns legal alternatives. Built to test whether a dense rulebook could be encoded faithfully enough to produce auditable determinations.',
-		stack: ['TypeScript', 'Rules engine', 'Adversarial tests'],
-		stats: [
-			{ value: '13', label: 'rules in the pipeline' },
-			{ value: '29', label: 'finding codes' },
-			{ value: '195', label: 'tests across 29 files' },
-			{ value: '0', label: 'models called' },
-		],
-		source: { label: 'Public on GitHub', href: 'https://github.com/tanis226-hue/nba-trade-machine' },
+		// No status and no link: private engagement, described by capability only.
+		name: 'Healthcare Administrative Operations Platform',
+		meta: 'Private client work',
+		status: null,
+		body: 'Designed a centralized system for credentialing, workforce operations, scheduling, and compliance-sensitive records.',
+		href: null,
+		cta: null,
+	},
+	{
+		name: 'OpsAdvisor',
+		meta: 'Applied AI',
+		status: 'Prototype',
+		body: 'Built a structured operations assessment tool that turns user-provided information into a prioritized improvement plan without allowing the model to invent findings.',
+		href: 'https://opsadvisor.netlify.app/',
+		cta: 'View prototype',
 	},
 ];
 
-// Condensed: real systems that support the same story without a full brief each.
-const alsoBuilt = [
-	{
-		name: 'RavePM',
-		kind: 'AI governance architecture',
-		status: 'Product, pre-pilot',
-		note: 'Property-management SaaS where every AI action passes an approval layer: a hard set of actions the model may never auto-execute, dollar-band approval rules, and an audit row for every outcome.',
-	},
-	{
-		name: 'ZLDA Assistant',
-		kind: 'Production LLM tooling',
-		status: 'Internal tool',
-		note: 'A private executive assistant with real write access across tasks, calendar, email, and finance. Bounded agent loop with loop detection, a pgvector RAG pipeline, per-model cost accounting, and its own MCP server.',
-	},
-	{
-		name: 'Client systems',
-		kind: 'Delivered engagements',
-		status: 'Delivered',
-		note: 'Commerce, scheduling, and intake for a restoration shop, a bakery, and a landscaping business. Prices recomputed server-side, idempotent payment webhooks, and authorization pushed into row-level security.',
-	},
-];
-
-const domains = ['healthcare', 'legal', 'architecture', 'education', 'construction', 'small-business ops'];
-
+// Not every job. The resume carries the full chronology.
 const experience = [
 	{
 		org: 'ZLDA Group',
-		role: 'Business Systems Architect and Co-Founder',
-		dates: '2024 - present',
-		note: 'Translate how a business actually runs into requirements and systems, then build and deploy them: intake, ordering, scheduling, portals, and internal tooling on one database.',
-	},
-	{
-		org: 'Premier Inpatient Partners',
-		role: 'AI and Process Automation Lead',
-		dates: '2026 (contract)',
-		note: 'Built an administrative platform for a physician-group operation with no prior technical infrastructure, running discovery across three departments into a phased delivery.',
+		role: 'Co-Founder, Business Systems',
+		body: 'Design and implement operational systems for organizations managing work through spreadsheets, disconnected tools, and manual processes.',
 	},
 	{
 		org: 'Florida SouthWestern State College',
 		role: 'Adjunct Professor, Business and Technology',
-		dates: 'scheduled Aug 2026',
-		note: 'Scheduled to begin teaching undergraduate business and technology in the School of Business and Technology.',
+		body: 'Teach undergraduate business and technology coursework beginning Fall 2026.',
+	},
+	{
+		org: 'Physician organization',
+		role: 'AI and Process Automation Lead',
+		body: 'Led discovery and implementation of an internal administrative platform supporting more than 80 physicians.',
 	},
 	{
 		org: 'Studio+',
 		role: 'Project Administrator',
-		dates: '2024 - 2025',
-		note: 'Ran project financial administration for a six-office architecture firm and standardized billing workflows to reduce rework and revenue leakage.',
+		body: 'Managed project financial operations across a six-office architecture practice and improved billing controls.',
 	},
 	{
 		org: 'U.S. Navy Reserve',
 		role: 'Construction Mechanic, Seabee',
-		dates: '2017 - 2023',
-		note: 'Maintained heavy-equipment readiness under Navy technical procedures while working full time and completing an undergraduate degree.',
-	},
-];
-
-const approach = [
-	{
-		title: 'Understand the operation before designing the system',
-		body: 'The data model should reflect how work actually moves, including exceptions, approvals, ownership, and failure conditions, not the idealized process on a slide.',
-	},
-	{
-		title: 'Keep correctness deterministic',
-		body: 'Where a result must be auditable or reproducible, the calculation belongs in tested code. Models may interpret, summarize, or draft; they do not decide the underlying truth.',
-	},
-	{
-		title: 'Enforce governance below the interface',
-		body: 'Tenant isolation, authorization, and audit immutability should not depend on a route handler being written correctly. They belong in the database, in rules and triggers.',
-	},
-	{
-		title: 'Treat AI actions as governed transactions',
-		body: 'Consequential AI needs explicit permissions, approval thresholds, source visibility, cost controls, and a durable record of what the model did and why.',
-	},
-	{
-		title: 'Design for degraded conditions',
-		body: 'Providers fail, credentials expire, config goes stale. Systems should preserve the essential workflow and fail in controlled, observable ways.',
+		body: 'Maintained heavy-equipment readiness under Navy technical and documentation standards.',
 	},
 ];
 
 const base = 'https://www.zldagroup.com/insights';
 const essays = [
-	{ date: '2026-07-14', title: 'Cost Discipline for AI: How to Think About ROI', href: `${base}/cost-discipline-for-ai` },
-	{ date: '2026-07-01', title: 'Build, Buy, or Rent: The Software Math Just Changed', href: `${base}/build-buy-or-rent` },
-	{ date: '2026-06-24', title: 'How to Safely Get Started with AI Coding', href: `${base}/how-to-safely-get-started-with-ai-coding` },
-	{ date: '2026-06-15', title: "Most Companies Aren't Ready for AI", href: `${base}/most-companies-arent-ready-for-ai` },
-	{ date: '2026-05-31', title: 'The Need to Know: AI Vibe Coding', href: `${base}/the-need-to-know-ai-vibe-coding` },
-	{ date: '2026-05-24', title: 'Why Growing Businesses Start to Feel Inefficient', href: `${base}/why-growing-businesses-start-to-feel-inefficient` },
-];
-
-const credentials = [
-	{ label: 'Education', items: ['MBA, Information Systems', 'MS, Data Analytics and AI (2027)'] },
-	{ label: 'Certifications', items: ['PMP', 'CSCP', 'Lean Six Sigma Black Belt', 'IBM Enterprise Design Thinking'] },
-	{ label: 'Teaching', items: ['Business and Technology, FSW (scheduled Aug 2026)'] },
+	{ title: "Most Companies Aren't Ready for AI", href: `${base}/most-companies-arent-ready-for-ai` },
+	{ title: 'Cost Discipline for AI: How to Think About ROI', href: `${base}/cost-discipline-for-ai` },
+	{ title: 'Why Growing Businesses Start to Feel Inefficient', href: `${base}/why-growing-businesses-start-to-feel-inefficient` },
 ];
 
 const nav = [
 	{ href: '#work', label: 'Work' },
 	{ href: '#experience', label: 'Experience' },
-	{ href: '#approach', label: 'Approach' },
 	{ href: '#writing', label: 'Writing' },
+	{ href: '#about', label: 'About' },
 	{ href: '#contact', label: 'Contact' },
 ];
 
-const title = 'David Tanis - AI & Business Systems Architect';
+const title = 'David Tanis - Business Systems Architect';
 const description =
-	'I turn complex operations into governed, working systems: process redesign, data architecture, AI governance, and hands-on delivery across healthcare, education, and regulated work.';
+	'I work across operations, systems, and technology. Background in healthcare, legal services, architecture, education, and military service.';
 ---
 
 <Layout title={title} description={description}>
@@ -179,15 +112,11 @@ const description =
 			<a href="#main" class="font-display text-lg font-bold tracking-tight">David Tanis</a>
 			<nav aria-label="Sections" class="flex items-center gap-4 sm:gap-6">
 				<ul class="hidden items-center gap-6 font-mono text-[0.75rem] lowercase tracking-wide text-ink-soft sm:flex">
-					{
-						nav.map((n) => (
-							<li>
-								<a href={n.href} class="transition hover:text-accent-dark">
-									{n.label}
-								</a>
-							</li>
-						))
-					}
+					{nav.map((n) => (
+						<li>
+							<a href={n.href} class="transition hover:text-accent-dark">{n.label}</a>
+						</li>
+					))}
 				</ul>
 				<button
 					id="theme-toggle"
@@ -203,142 +132,102 @@ const description =
 	</header>
 
 	<main id="main">
-		<!-- Hero and positioning -->
-		<section class="wrap grid gap-10 pb-10 pt-10 sm:pt-14 lg:grid-cols-[1.5fr_1fr] lg:items-center lg:gap-14">
-			<div>
-				<p class="kicker">AI &amp; Business Systems Architect / Naples, FL</p>
+		<!-- Hero. wrap-wide and a 2.2fr text column so the headline sets in two lines. -->
+		<section class="wrap-wide grid gap-10 pb-10 pt-10 sm:pt-14 lg:grid-cols-[2.2fr_1fr] lg:items-start lg:gap-14">
+			<div class="lg:pt-2">
+				<p class="kicker">Business Systems Architect / Naples, FL</p>
 				<h1 class="mt-5 text-display">
-					I build the systems <span class="text-accent-dark">businesses actually run on.</span>
+					I work across operations, <span class="text-accent-dark">systems, and technology.</span>
 				</h1>
-				<p class="mt-6 max-w-[46ch] text-body-l text-ink-soft">
-					I design and build governed software for organizations running on fragmented workflows,
-					spreadsheets, and policy-heavy processes, combining process redesign, data architecture, AI
-					governance, and hands-on delivery.
+				<p class="mt-6 max-w-[56ch] text-body-l text-ink-soft">
+					My background spans healthcare, legal services, architecture, education, and military
+					service. I focus on understanding how an organization works, improving how the work moves,
+					and building practical systems where existing tools fall short.
 				</p>
 				<div class="mt-8 flex flex-wrap items-center gap-3">
-					<a href="#work" class="btn-primary">See the work</a>
-					<a href="mailto:tanis226@gmail.com" class="btn-ghost">Discuss a role</a>
-					<a href="/David-Tanis-Resume.pdf" class="px-2 text-sm font-bold text-ink transition hover:text-accent-dark">Résumé</a>
+					<a href="#work" class="btn-primary">View selected work</a>
+					<a href="/David-Tanis-Resume.pdf" class="btn-ghost">View résumé</a>
 				</div>
 			</div>
 			<div class="lg:justify-self-end">
-				<div class="max-w-[15rem]">
+				<div class="max-w-[19rem]">
 					<img
-						src="/david-tanis-480.webp"
+						src="/david-tanis-960.webp"
 						srcset="/david-tanis-480.webp 480w, /david-tanis-960.webp 960w"
-						sizes="200px"
-						width="200"
-						height="200"
+						sizes="(max-width: 640px) 200px, 304px"
+						width="304"
+						height="304"
 						alt="David Tanis"
 						fetchpriority="high"
-						class="avatar h-[140px] w-[140px] sm:h-[188px] sm:w-[188px]"
+						class="avatar h-[200px] w-[200px] sm:h-[304px] sm:w-[304px]"
 					/>
-					<p class="mt-5 text-body text-ink-soft">
-						Co-founder of <a class="link-accent" href="https://zldagroup.com">ZLDA Group</a>, where
-						most of this ships.
+					<p class="provenance mt-4">
+						MBA in Information Systems / PMP / Lean Six Sigma Black Belt / CSCP
 					</p>
-					<p class="provenance mt-3">MBA / PMP / CSCP / Lean Six Sigma Black Belt</p>
+					<p class="provenance mt-1.5">Adjunct Professor / U.S. Navy Reserve veteran</p>
+					<div class="mt-6 border-t border-line/12 pt-5">
+						<p class="kicker text-ink-muted">Selected scope</p>
+						<ul class="mt-3 space-y-2">
+							{scope.map((s) => (
+								<li class="flex gap-2.5 text-meta text-ink-soft">
+									<span aria-hidden="true" class="mt-1.5 h-1 w-1 flex-none rounded-full bg-accent"></span>
+									<span>{s}</span>
+								</li>
+							))}
+						</ul>
+					</div>
 				</div>
 			</div>
 		</section>
 
-		<!-- Domains + disclosure -->
-		<section class="wrap pb-14 sm:pb-16">
-			<div class="border-t border-line/12 pt-7">
-				<p class="kicker text-ink-muted">Worked across</p>
-				<ul class="tech mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-					{
-						domains.map((d, i) => (
-							<>
-								{i > 0 && <li aria-hidden="true" class="text-accent-dark">/</li>}
-								<li>{d}</li>
-							</>
-						))
-					}
-				</ul>
-				<p class="mt-6 max-w-[64ch] text-body text-ink-soft">
-					Client and product work is often private. Where I cannot show customer data, I show the
-					architecture, the controls, and the evidence I can verify. Figures below are counted from
-					source.
-				</p>
+		<!-- Personal story, high on the page -->
+		<section class="wrap-wide pb-14 sm:pb-16">
+			<div class="border-t border-line/12 pt-8">
+				<h2 class="max-w-[24ch] text-lead">I came to technology through operations.</h2>
+				<div class="mt-5 grid gap-4 text-body-l text-ink-soft lg:max-w-[68ch]">
+					<p>
+						I started in environments where the work had to be accurate, documented, and completed
+						under real constraints. Over time, I kept seeing the same problem: important operations
+						were being managed through spreadsheets, disconnected tools, and knowledge held by a few
+						people.
+					</p>
+					<p>
+						I learned to design and build systems because I wanted to solve the whole problem, not
+						stop at the recommendation.
+					</p>
+				</div>
 			</div>
 		</section>
 
-		<!-- Featured work -->
-		<section id="work" class="wrap-wide scroll-mt-20 pb-4">
-			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-line/15 pb-5">
-				<h2 class="text-lead">Selected work.</h2>
-				<p class="kicker">Problem, role, decisions, evidence</p>
+		<!-- Selected work -->
+		<section id="work" class="wrap-wide scroll-mt-20 pb-14 sm:pb-16">
+			<div class="border-b border-line/15 pb-5">
+				<p class="kicker">Selected work</p>
+				<h2 class="mt-3 text-lead">A few systems I have built.</h2>
 			</div>
-			<div>
-				{
-					featured.map((item, i) => (
-						<article class="grid gap-6 border-b border-line/10 py-10 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-12">
-							<div class="lg:sticky lg:top-24 lg:self-start">
-								<p class="kicker text-ink-muted">
-									{String(i + 1).padStart(2, '0')} / {item.kind}
-								</p>
-								<h3 class="mt-2 text-title">{item.name}</h3>
-								<p class="provenance mt-3 text-accent-dark">{item.status}</p>
-								<ul class="tech mt-4 flex flex-wrap gap-x-3 gap-y-1">
-									{item.stack.map((s) => (
-										<li>{s}</li>
-									))}
-								</ul>
-								<p class="provenance mt-4">
-									{item.source.href ? (
-										<a class="link-accent" href={item.source.href} target="_blank" rel="noopener">
-											{item.source.label} &#8599;
-										</a>
-									) : (
-										<span>// {item.source.label}</span>
-									)}
-								</p>
-							</div>
-							<div>
-								<p class="text-body-l text-ink">{item.problem}</p>
-								<dl class="mt-6 space-y-4">
-									<div class="grid gap-1 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
-										<dt class="kicker pt-1 text-ink-muted">Role</dt>
-										<dd class="text-body text-ink-soft">{item.role}</dd>
-									</div>
-									<div class="grid gap-1 sm:grid-cols-[7rem_minmax(0,1fr)] sm:gap-4">
-										<dt class="kicker pt-1 text-ink-muted">System</dt>
-										<dd class="text-body text-ink-soft">{item.decisions}</dd>
-									</div>
-								</dl>
-								<dl class="mt-7 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-line/12 pt-6 sm:grid-cols-4">
-									{item.stats.map((s) => (
-										<div class="flex flex-col-reverse gap-1">
-											<dt class="stat-label">{s.label}</dt>
-											<dd class="stat-sm">{s.value}</dd>
-										</div>
-									))}
-								</dl>
-							</div>
-						</article>
-					))
-				}
-			</div>
-		</section>
-
-		<!-- Also built -->
-		<section class="wrap-wide pb-16 pt-10 sm:pb-20">
-			<p class="kicker text-ink-muted">Also built</p>
-			<ul class="mt-5">
-				{
-					alsoBuilt.map((item) => (
-						<li class="grid gap-2 border-b border-line/10 py-5 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-12">
-							<div>
-								<h3 class="text-body-l font-semibold text-ink">{item.name}</h3>
-								<p class="provenance mt-1">
-									{item.kind} &middot; <span class="text-accent-dark">{item.status}</span>
-								</p>
-							</div>
-							<p class="text-body text-ink-soft">{item.note}</p>
-						</li>
-					))
-				}
+			<ul class="grid gap-x-12 sm:grid-cols-2">
+				{work.map((item) => (
+					<li class="border-b border-line/10 py-7">
+						<h3 class="text-title">{item.name}</h3>
+						<p class="mt-2 text-body font-semibold text-ink-soft">{item.meta}</p>
+						{item.status && (
+							<p class="mt-2.5">
+								<span
+									class="inline-block rounded-full px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-accent-dark"
+									style="background-color: rgb(var(--color-accent-rgb) / 0.1)"
+								>{item.status}</span>
+							</p>
+						)}
+						<p class="mt-4 max-w-[46ch] text-body text-ink-soft">{item.body}</p>
+						{item.href && (
+							<p class="mt-4">
+								<a class="provenance link-accent" href={item.href} target="_blank" rel="noopener">
+									{item.cta} &#8599;
+								</a>
+							</p>
+						)}
+					</li>
+				))}
 			</ul>
 		</section>
 
@@ -347,176 +236,91 @@ const description =
 			<div class="wrap-wide py-14 sm:py-16">
 				<div class="border-b border-line/15 pb-5">
 					<p class="kicker">Experience</p>
-					<h2 class="mt-3 max-w-[30ch] text-lead">Grounded in real operating environments.</h2>
-					<p class="mt-4 max-w-[60ch] text-body text-ink-soft">
-						My systems work sits on operating experience across healthcare, legal services,
-						architecture, education, and the military. I have led discovery, financial
-						administration, process redesign, requirements, implementation, and support, not only
-						application development.
+					<h2 class="mt-3 text-lead">Different industries. A consistent pattern.</h2>
+					<p class="mt-4 max-w-[64ch] text-body text-ink-soft">
+						Across each role, the work has centered on understanding operations, improving controls,
+						and building better systems.
 					</p>
 				</div>
 				<ul class="mt-2">
-					{
-						experience.map((e) => (
-							<li class="grid gap-1 border-b border-line/10 py-6 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)_minmax(0,10rem)] lg:gap-8">
-								<div>
-									<h3 class="text-body-l font-semibold text-ink">{e.org}</h3>
-									<p class="provenance mt-1">{e.role}</p>
-								</div>
-								<p class="text-body text-ink-soft">{e.note}</p>
-								<p class="provenance lg:text-right">{e.dates}</p>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-		</section>
-
-		<!-- Approach -->
-		<section id="approach" class="wrap-wide scroll-mt-20 py-14 sm:py-16">
-			<div class="border-b border-line/15 pb-5">
-				<p class="kicker">Approach</p>
-				<h2 class="mt-3 max-w-[26ch] text-lead">How I think about building.</h2>
-			</div>
-			<ol class="mt-2">
-				{
-					approach.map((p, i) => (
-						<li class="grid gap-2 border-b border-line/10 py-6 lg:grid-cols-[minmax(0,3rem)_minmax(0,20rem)_minmax(0,1fr)] lg:gap-8">
-							<p class="kicker text-ink-muted">{String(i + 1).padStart(2, '0')}</p>
-							<h3 class="text-body-l font-semibold text-accent-dark">{p.title}</h3>
-							<p class="text-body text-ink-soft">{p.body}</p>
+					{experience.map((e) => (
+						<li class="grid gap-1 border-b border-line/10 py-6 lg:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] lg:gap-10">
+							<div>
+								<h3 class="text-body-l font-semibold text-ink">{e.org}</h3>
+								<p class="provenance mt-1">{e.role}</p>
+							</div>
+							<p class="text-body text-ink-soft">{e.body}</p>
 						</li>
-					))
-				}
-			</ol>
-		</section>
-
-		<!-- Writing: essay index -->
-		<section id="writing" class="bg-bg-soft scroll-mt-20">
-			<div class="wrap-wide py-14 sm:py-16">
-				<div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-line/15 pb-5">
-					<div>
-						<p class="kicker">Writing</p>
-						<h2 class="mt-3 text-lead">Thinking, in the open.</h2>
-					</div>
-					<a class="provenance link-accent" href="https://www.zldagroup.com/insights">
-						all essays &#8599;
-					</a>
-				</div>
-				<ul>
-					{
-						essays.map((e) => (
-							<li>
-								<a
-									href={e.href}
-									class="index-row group grid gap-1 border-b border-line/10 py-5 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-baseline sm:gap-8 lg:py-6"
-								>
-									<time datetime={e.date} class="provenance pt-0.5">{e.date}</time>
-									<span class="text-body-l text-ink transition-colors duration-200 group-hover:text-accent-dark">
-										{e.title}
-									</span>
-								</a>
-							</li>
-						))
-					}
+					))}
 				</ul>
+				<p class="mt-6 text-meta text-ink-muted">
+					Full chronology on the <a class="link-accent" href="/David-Tanis-Resume.pdf">résumé</a>.
+				</p>
 			</div>
 		</section>
 
-		<!-- About + credentials -->
-		<section id="about" class="wrap scroll-mt-20 py-14 sm:py-16">
-			<div class="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:gap-14">
+		<!-- Writing -->
+		<section id="writing" class="wrap-wide scroll-mt-20 py-14 sm:py-16">
+			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-line/15 pb-5">
 				<div>
-					<p class="kicker">About</p>
-					<h2 class="mt-3 text-lead">Operator first, builder by necessity.</h2>
-					<div class="mt-5 space-y-4 text-body text-ink-soft">
-						<p>
-							I came up through operations: patient registration and telemetry in a hospital, intake
-							at a law firm, financial administration at an architecture practice, permitting, and a
-							Navy Reserve maintenance shop. The through-line is process rigor, and a low tolerance
-							for work that a system should be doing.
-						</p>
-						<p>
-							I learned to build software so I could close that gap myself, end to end, rather than
-							hand a spec to someone who had never watched the work happen. That is the difference I
-							bring: I understand the operation and I can ship the system that governs it.
-						</p>
-					</div>
+					<p class="kicker">Writing</p>
+					<h2 class="mt-3 text-lead">Writing on operations, systems, and applied AI.</h2>
 				</div>
-				<div class="lg:border-l lg:border-line/12 lg:pl-10">
-					<dl class="space-y-6">
-						{
-							credentials.map((c) => (
-								<div>
-									<dt class="kicker text-ink-muted">{c.label}</dt>
-									<dd class="mt-2">
-										<ul class="space-y-1 text-body text-ink-soft">
-											{c.items.map((it) => (
-												<li>{it}</li>
-											))}
-										</ul>
-									</dd>
-								</div>
-							))
-						}
-						<div>
-							<dt class="kicker text-ink-muted">Documents</dt>
-							<dd class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-body">
-								<a class="link-accent" href="/David-Tanis-Resume.pdf">Résumé (PDF)</a>
-								<a class="link-accent" href="/David-Tanis-CV.pdf">Academic CV (PDF)</a>
-							</dd>
-						</div>
-					</dl>
-				</div>
+				<a class="provenance link-accent" href="https://www.zldagroup.com/insights">all essays &#8599;</a>
+			</div>
+			<ul>
+				{essays.map((e) => (
+					<li>
+						<a href={e.href} class="index-row group block border-b border-line/10 py-5 lg:py-6">
+							<span class="text-body-l text-ink transition-colors duration-200 group-hover:text-accent-dark">
+								{e.title}
+							</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+
+		<!-- About. Short: the fuller story is the section near the top. -->
+		<section id="about" class="bg-bg-soft scroll-mt-20">
+			<div class="wrap py-14 sm:py-16">
+				<p class="kicker">About</p>
+				<h2 class="mt-3 text-lead">Operator first. Builder by necessity.</h2>
+				<p class="mt-6 max-w-[68ch] text-body-l text-ink-soft">
+					I came to systems work through operations, where accuracy, documentation, and real-world
+					constraints mattered. That background shaped how I approach technology today: understand
+					the work first, then design the process, data, and systems around it.
+				</p>
+				<p class="mt-5 max-w-[68ch] text-body text-ink-soft">
+					I hold an MBA in Information Systems and am completing an MS in Data Analytics and
+					Artificial Intelligence. I am also a PMP, Lean Six Sigma Black Belt, CSCP, former Navy
+					Reservist, and adjunct professor of Business and Technology.
+				</p>
 			</div>
 		</section>
 
-		<!-- Current focus + contact -->
-		<section id="contact" class="bg-bg-soft scroll-mt-20">
-			<div class="wrap grid gap-10 py-14 sm:py-16 lg:grid-cols-[1.3fr_1fr] lg:gap-14">
-				<div>
-					<p class="kicker">Now</p>
-					<h2 class="mt-3 text-lead">Current focus.</h2>
-					<div class="mt-5 space-y-4 text-body text-ink-soft">
-						<p>
-							Taking <strong class="font-semibold text-ink">iepOS</strong> toward its first school
-							pilots: compliance workflows, tenant boundaries, and the implementation documentation
-							that earns institutional trust.
-						</p>
-						<p>
-							Completing an MS in Data Analytics and AI at FGCU, and scheduled to begin teaching
-							business and technology at Florida SouthWestern State College in August 2026.
-						</p>
-						<p>
-							My interests are AI governance, operations platforms, business systems architecture,
-							and rule-driven software where decisions have to be explainable.
-						</p>
-					</div>
-				</div>
-				<aside class="lg:border-l lg:border-line/12 lg:pl-10">
-					<p class="text-body-l text-ink">
-						Open to conversations about AI-enabled operations, solutions architecture, digital
-						transformation, and governed software.
-					</p>
-					<ul class="mt-6 space-y-2.5 text-body">
-						<li><a class="link-accent" href="mailto:tanis226@gmail.com">tanis226@gmail.com</a></li>
-						<li><a class="link-accent" href="https://www.linkedin.com/in/dtanis/">linkedin.com/in/dtanis</a></li>
-						<li><a class="link-accent" href="https://github.com/tanis226-hue">github.com/tanis226-hue</a></li>
-						<li><a class="link-accent" href="/David-Tanis-Resume.pdf">Résumé (PDF)</a></li>
-					</ul>
-					<p class="mt-6 max-w-[42ch] text-meta text-ink-muted">
-						Have a business problem? ZLDA Group is my team's front door. Hiring, teaching, and the
-						engineering itself come to me directly.
-					</p>
-				</aside>
-			</div>
+		<!-- Contact -->
+		<section id="contact" class="wrap scroll-mt-20 py-14 sm:py-16">
+			<p class="kicker">Contact</p>
+			<h2 class="mt-3 text-lead">Let's connect.</h2>
+			<p class="mt-5 max-w-[60ch] text-body-l text-ink-soft">
+				I am interested in business systems, transformation, implementation, and AI-enablement roles,
+				along with selected teaching and advisory opportunities.
+			</p>
+			<ul class="mt-7 flex flex-wrap gap-x-8 gap-y-2 text-body">
+				<li><a class="link-accent" href="mailto:tanis226@gmail.com">Email</a></li>
+				<li><a class="link-accent" href="https://www.linkedin.com/in/dtanis/">LinkedIn</a></li>
+				<li><a class="link-accent" href="/David-Tanis-Resume.pdf">Résumé</a></li>
+			</ul>
+			<p class="mt-8 text-meta text-ink-muted">
+				Looking for ZLDA Group? <a class="link-accent" href="https://zldagroup.com">Visit the firm's website.</a>
+			</p>
 		</section>
 	</main>
 
 	<footer class="wrap py-8">
-		<div class="flex flex-wrap items-center justify-between gap-3 border-t border-line/12 pt-6 text-meta text-ink-muted">
+		<div class="border-t border-line/12 pt-6 text-meta text-ink-muted">
 			<p>David Tanis &middot; Naples, Florida</p>
-			<p>Built with Astro</p>
 		</div>
 	</footer>
 </Layout>
